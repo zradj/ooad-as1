@@ -44,8 +44,10 @@ public class Generator {
         mean /= n;
 
         double stddev = 0.0;
-        for (Double x : randomValues) stddev += Math.pow(x - mean, 2);
-        if (n > 1) stddev = Math.sqrt(stddev / (n - 1));
+        if (n > 1) {
+            for (Double x : randomValues) stddev += Math.pow(x - mean, 2);
+            stddev = Math.sqrt(stddev / (n - 1));
+        }
 
         return new ArrayList<>(Arrays.asList(n, mean, stddev, min, max));
     }
