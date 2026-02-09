@@ -12,16 +12,16 @@ public class Generator {
 
     ArrayList<Double> populate(int n, int randNumGen) {
         Stream<Double> stream = switch (randNumGen) {
-            case 1 -> {
+            case 0 -> {
                 Random random = new Random();
                 yield random
                         .doubles(n, LOWER, UPPER)
                         .boxed();
             }
-            case 2 -> Stream
+            case 1 -> Stream
                     .generate(Math::random)
                     .limit(n);
-            case 3 -> ThreadLocalRandom
+            case 2 -> ThreadLocalRandom
                     .current()
                     .doubles(n, LOWER, UPPER)
                     .boxed();
@@ -67,12 +67,34 @@ public class Generator {
         }
 
         for (double result : results)
-            System.out.printf(columnFormat, result);
+            System.out.printf(columnFormat, String.format("%.4f", result));
 
+        System.out.println("|");
         System.out.println(tableVerticalBorder);
     }
 
-    public static void main(String[] args) {
+    void execute() {
+        String[] randNumGenNames = new String[] {
+                "java.util.Random",
+                "Math.random()",
+                "java.util.concurrent.ThreadLocalRandom"
+        };
 
+        int[] nValues = new int[] {10, 100, 10000};
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.println("Method: " + randNumGenNames[i] + ", n = " + nValues[j]);
+                ArrayList<Double> randomValues = populate(nValues[j], i);
+                ArrayList<Double> stats = statistics(randomValues);
+                display(stats, true);
+                System.out.println();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Generator g = new Generator();
+        g.execute();
     }
 }
