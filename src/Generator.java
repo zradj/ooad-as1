@@ -29,7 +29,7 @@ public class Generator {
     /**
      * The method for generating an array of `n` random values using one of the three algorithms.
      * @param n the number of random values to generate
-     * @param randNumGen indicates which generation algorithm to use (1-3).
+     * @param randNumGen indicates which generation algorithm to use (0-2).
      * @return An array of generated random values.
      */
     ArrayList<Double> populate(int n, int randNumGen) {
