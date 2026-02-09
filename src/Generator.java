@@ -2,20 +2,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Generator {
 
+    private final double LOWER = 0;
+    private final double UPPER = 1;
+
     ArrayList<Double> populate(int n, int randNumGen) {
-        double lower = 0;
-        double upper = 1;
         Stream<Double> stream = switch (randNumGen) {
             case 1 -> {
                 Random random = new Random();
                 yield random
-                        .doubles(n, lower, upper)
+                        .doubles(n, LOWER, UPPER)
                         .boxed();
             }
             case 2 -> Stream
@@ -23,7 +23,7 @@ public class Generator {
                     .limit(n);
             case 3 -> ThreadLocalRandom
                     .current()
-                    .doubles(n, lower, upper)
+                    .doubles(n, LOWER, UPPER)
                     .boxed();
             default -> throw new IllegalArgumentException("No method with number " + randNumGen);
         };
@@ -48,6 +48,28 @@ public class Generator {
         if (n > 1) stddev = Math.sqrt(stddev / (n - 1));
 
         return new ArrayList<>(Arrays.asList(n, mean, stddev, min, max));
+    }
+
+    void display(ArrayList<Double> results, boolean headerOn) {
+        int columnWidth = 15;
+        String columnFormat = "| %-" + columnWidth + "s ";
+        String[] columnNames = new String[] {"n", "mean", "stddev", "min", "max"};
+        String columnVerticalBorder = "+" + "-".repeat(columnWidth + 2);
+        String tableVerticalBorder = columnVerticalBorder.repeat(5) + "+";
+
+        System.out.println(tableVerticalBorder);
+
+        if (headerOn) {
+            for (String columnName : columnNames)
+                System.out.printf(columnFormat, columnName);
+            System.out.println("|");
+            System.out.println(tableVerticalBorder);
+        }
+
+        for (double result : results)
+            System.out.printf(columnFormat, result);
+
+        System.out.println(tableVerticalBorder);
     }
 
     public static void main(String[] args) {
